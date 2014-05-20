@@ -22,8 +22,8 @@
         return this.each(function(){
 
             var el = $(this),
-                elWrap = el.parent(),
-                offsetTop = elWrap.offset().top,
+                elWrap = null,
+                offsetTop = 0,
                 pos = settings.position,
                 correctY = parseInt(settings.correctY),
                 fixedClass = settings.fixedClass,
@@ -101,7 +101,10 @@
             // on load
             if (wrapper)
                 el.wrap('<div/>');
-            
+
+            elWrap = el.parent();
+            offsetTop = elWrap.offset().top;
+
             if(pos == 'top'){
                 if (winScroll > 0){
                     elTopPosition(el, elWrap, offsetTop, winScroll);
