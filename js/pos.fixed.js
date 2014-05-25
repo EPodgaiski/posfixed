@@ -13,7 +13,7 @@
             position : 'top', // Vertical position: 'top', 'bottom';
             correctY : 0, // Vertical correction (int, px): '10';
             fixedClass : 'state_fixed', // Class ws 'position:fixed': 'some_class';
-            container : '', // Parent or similar continer (jQuery object): $('#someId/.some_class');
+            container : '', // Parent or similar container (jQuery object): $('#someId/.some_class');
             rightSide : false, // If current element is on right side in the parent: true, false;
             wrapper : true, // Wrap current element to <div>: true, false;
             parentWidth : true // Sets the width of the parent element: true, false;
@@ -58,9 +58,11 @@
             };
 
             function elTopPosition(el, elWrap, offsetTop, winScroll){
+                var pTop = 0;
+
                 if (el.outerHeight() < getClientHeight()) {
-                    if ( (container.first().length) && ((winScroll + el.outerHeight() + correctY) > (container.offset().top + container.height())) ){
-                        var pTop = (container.offset().top + container.height()) - (offsetTop + el.outerHeight());
+                    if ( (container.length) && ((winScroll + el.outerHeight() + correctY) > (container.first().offset().top + container.first().height())) ){
+                        pTop = (container.first().offset().top + container.first().height()) - (offsetTop + el.outerHeight());
 
                         el.removeClass(fixedClass).css({'top':pTop, 'position':'relative'});
                     }
@@ -81,8 +83,10 @@
             };
 
             function elBottomPosition(el, elWrap, offsetTop, winScroll){
-                if ( (container.first().length) && ((winScroll + getClientHeight() - el.outerHeight() - correctY) <= (container.offset().top))){
-                    var pBottom = (container.outerHeight() - el.outerHeight() - correctY);
+                var pBottom = 0;
+
+                if ( (container.length) && ((winScroll + getClientHeight() - el.outerHeight() - correctY) <= (container.first().offset().top))){
+                    pBottom = (container.first().outerHeight() - el.outerHeight() - correctY);
 
                     el.removeClass(fixedClass).css({'bottom':pBottom, 'position':'relative'});
                 }
