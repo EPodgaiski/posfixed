@@ -1,5 +1,5 @@
 //******************************
-// Position fixed v:1.0.1, 2013, jQuery plugin
+// Position fixed v:0.1.a, 2013, jQuery plugin
 // Creater: Egor Podgaiski, http://gorik.name/
 // Dual licensed under the MIT and GPL licenses:
 // http://www.opensource.org/licenses/mit-license.php
@@ -36,7 +36,6 @@
             function getClientWidth(){
                 return document.compatMode == 'CSS1Compat' && !window.opera ? document.documentElement.clientWidth : document.body.clientWidth;
             };
-            
 
             function getClientHeight(){
                 return $(window).height();
@@ -58,20 +57,25 @@
             };
 
             function elTopPosition(el, elWrap, offsetTop, winScroll){
-                var pTop = 0;
+                var pTop = '',
+                    maxBottom = 0,
+                    elHeight = el.outerHeight(),
+                    elWidth = getElWidth(el);
 
-                if (el.outerHeight() < getClientHeight()) {
-                    if ( (container.length) && ((winScroll + el.outerHeight() + correctY) > (container.first().offset().top + container.first().height())) ){
-                        pTop = (container.first().offset().top + container.first().height()) - (offsetTop + el.outerHeight());
-
+                if (elHeight < getClientHeight()){
+                    if (container.length){
+                        maxBottom = container.offset().top + container.height();
+                    }
+                    if ( (maxBottom > 0) && ((winScroll + elHeight + correctY) > maxBottom) ){
+                        pTop = maxBottom - (offsetTop + elHeight);
                         el.removeClass(fixedClass).css({'top':pTop, 'position':'relative'});
                     }
                     else if ((offsetTop - correctY) < winScroll){
-                        elWrap.css('height', el.outerHeight());
-                        el.css('width', getElWidth(el));
-                        el.addClass(fixedClass).css({'top':correctY, 'position':'fixed'});
-                        if (rightSide)
+                        elWrap.css('height', elHeight);
+                        el.addClass(fixedClass).css({'width':elWidth, 'top':correctY, 'position':'fixed'});
+                        if (rightSide){
                             el.css('margin-left', -el.outerWidth());
+                        }
                     }
                     else{
                         clearStyles(el, elWrap);
@@ -83,19 +87,22 @@
             };
 
             function elBottomPosition(el, elWrap, offsetTop, winScroll){
-                var pBottom = 0;
+                var pBottom = '',
+                    elHeight = el.outerHeight(),
+                    elWidth = getElWidth(el),
+                    winHeight = getClientHeight();
 
-                if ( (container.length) && ((winScroll + getClientHeight() - el.outerHeight() - correctY) <= (container.first().offset().top))){
-                    pBottom = (container.first().outerHeight() - el.outerHeight() - correctY);
+                if ( (container.length) && ((winScroll + winHeight - elHeight - correctY) <= (container.offset().top))){
+                    pBottom = (container.outerHeight() - elHeight - correctY);
 
                     el.removeClass(fixedClass).css({'bottom':pBottom, 'position':'relative'});
                 }
-                else if ((offsetTop + el.outerHeight() + correctY) >= (getClientHeight() + winScroll)){
-                    elWrap.css('height', el.outerHeight());
-                    el.css('width', getElWidth(el));
-                    el.addClass(fixedClass).css({'bottom':correctY, 'position':'fixed'});
-                    if (rightSide)
+                else if ((offsetTop + elHeight + correctY) >= (winHeight + winScroll)){
+                    elWrap.css('height', elHeight);
+                    el.addClass(fixedClass).css({'width':elWidth, 'bottom':correctY, 'position':'fixed'});
+                    if (rightSide){
                         el.css('margin-left', -el.outerWidth());
+                    }
                 }
                 else{
                     clearStyles(el, elWrap);
@@ -108,6 +115,10 @@
 
             elWrap = el.parent();
             offsetTop = elWrap.offset().top;
+
+            if (container.length){
+                container = container.first();
+            }
 
             if(pos == 'top'){
                 if (winScroll > 0){
@@ -135,6 +146,7 @@
                 };
             });
 
+            // on resize
             $(window).on('resize', function (){
 
                 var offsetTop = el.parent().offset().top,
