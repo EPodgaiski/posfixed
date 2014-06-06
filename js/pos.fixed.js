@@ -43,10 +43,13 @@
 
             function getElWidth(obj){
                 var width = obj.width(),
-                    decimalwidth =  window.getComputedStyle(obj.get(0)).width; //ie9 decimal width*/
+                    decimalwidth = 0;
 
-                if (1 > (decimalwidth - width) <= 0)
-                    width = decimalwidth;
+                if (window.getComputedStyle){
+                    decimalwidth =  window.getComputedStyle(obj.get(0)).width; //ie9 decimal width*/
+                    if (1 > (decimalwidth - width) <= 0)
+                        width = decimalwidth;
+                }
 
                 return width;
             };
