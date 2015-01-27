@@ -76,6 +76,7 @@
                     else if ((offsetTop - correctY) < winScroll){
                         elWrap.css('height', elHeight);
                         el.addClass(fixedClass).css({'width':elWidth, 'top':correctY, 'position':'fixed'});
+                        el.trigger('fixedOn');
                         if (rightSide){
                             el.css('margin-left', -el.outerWidth());
                         }
@@ -103,6 +104,7 @@
                 else if ((offsetTop + elHeight + correctY) >= (winHeight + winScroll)){
                     elWrap.css('height', elHeight);
                     el.addClass(fixedClass).css({'width':elWidth, 'bottom':correctY, 'position':'fixed'});
+                    el.trigger('fixedOn');
                     if (rightSide){
                         el.css('margin-left', -el.outerWidth());
                     }
@@ -119,7 +121,7 @@
             elWrap = el.parent();
             offsetTop = elWrap.offset().top;
 
-            if (container.length){
+            if (container.length > 1){
                 container = container.first();
             }
 
